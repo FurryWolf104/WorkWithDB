@@ -26,5 +26,8 @@
         <!-- === Управление транзакциями === -->
         <property name="current_session_context_class">thread</property>
 
+        <!-- === Entity классы === -->
+        <mapping class="entity.User"/>
+
     </session-factory>
 </hibernate-configuration>
