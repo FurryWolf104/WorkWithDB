@@ -4,6 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.3</version>
+        <relativePath/>
+    </parent>
+
     <groupId>org.example</groupId>
     <artifactId>Module2</artifactId>
     <version>1.0-SNAPSHOT</version>
@@ -15,50 +22,41 @@
     </properties>
 
     <dependencies>
+        <!-- === ОСНОВНЫЕ СТАРТЕРЫ SPRING BOOT === -->
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>5.6.15.Final</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
         </dependency>
 
+        <!-- === БАЗА ДАННЫХ === -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.7.7</version>
+            <scope>runtime</scope>
         </dependency>
 
+        <!-- === ТЕСТИРОВАНИЕ === -->
         <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>2.20.0</version>
-        </dependency>
-
-        <!-- junit -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>5.9.2</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.9.2</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- Mockito -->
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>5.2.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-junit-jupiter</artifactId>
-            <version>5.2.0</version>
-            <scope>test</scope>
+            <!-- Исключаем JUnit 4, если он попадёт из каких-то транзитивных зависимостей -->
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Testcontainers -->
@@ -68,35 +66,146 @@
             <version>2.0.2</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>1.21.2</version>
+            <version>1.21.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
-            <version>1.21.2</version>
+            <version>1.21.3</version>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>2.0.7</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>2.0.7</version>
-        </dependency>
-
-
-
     </dependencies>
+<!--    <dependencies>-->
+<!--        <dependency>-->
+<!--            <groupId>org.hibernate</groupId>-->
+<!--            <artifactId>hibernate-core</artifactId>-->
+<!--            <version>5.6.15.Final</version>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>org.postgresql</groupId>-->
+<!--            <artifactId>postgresql</artifactId>-->
+<!--            <version>42.7.7</version>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>org.apache.logging.log4j</groupId>-->
+<!--            <artifactId>log4j-core</artifactId>-->
+<!--            <version>2.20.0</version>-->
+<!--        </dependency>-->
+
+<!--        &lt;!&ndash; junit &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.junit.jupiter</groupId>-->
+<!--            <artifactId>junit-jupiter-api</artifactId>-->
+<!--            <version>5.9.2</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.junit.jupiter</groupId>-->
+<!--            <artifactId>junit-jupiter-engine</artifactId>-->
+<!--            <version>5.9.2</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
+
+<!--        &lt;!&ndash; Mockito &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.mockito</groupId>-->
+<!--            <artifactId>mockito-core</artifactId>-->
+<!--            <version>5.2.0</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.mockito</groupId>-->
+<!--            <artifactId>mockito-junit-jupiter</artifactId>-->
+<!--            <version>5.2.0</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
+
+<!--        &lt;!&ndash; Testcontainers &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.testcontainers</groupId>-->
+<!--            <artifactId>testcontainers</artifactId>-->
+<!--            <version>2.0.2</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>org.testcontainers</groupId>-->
+<!--            <artifactId>junit-jupiter</artifactId>-->
+<!--            <version>1.21.2</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.testcontainers</groupId>-->
+<!--            <artifactId>postgresql</artifactId>-->
+<!--            <version>1.21.2</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
+
+<!--&lt;!&ndash;        <dependency>&ndash;&gt;-->
+<!--&lt;!&ndash;            <groupId>org.slf4j</groupId>&ndash;&gt;-->
+<!--&lt;!&ndash;            <artifactId>slf4j-simple</artifactId>&ndash;&gt;-->
+<!--&lt;!&ndash;            <version>2.0.7</version>&ndash;&gt;-->
+<!--&lt;!&ndash;            <scope>test</scope>&ndash;&gt;-->
+<!--&lt;!&ndash;        </dependency>&ndash;&gt;-->
+
+<!--&lt;!&ndash;        <dependency>&ndash;&gt;-->
+<!--&lt;!&ndash;            <groupId>org.slf4j</groupId>&ndash;&gt;-->
+<!--&lt;!&ndash;            <artifactId>slf4j-api</artifactId>&ndash;&gt;-->
+<!--&lt;!&ndash;            <version>2.0.7</version>&ndash;&gt;-->
+<!--&lt;!&ndash;        </dependency>&ndash;&gt;-->
+
+
+<!--        &lt;!&ndash; Spring &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-web</artifactId>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-data-jpa</artifactId>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-devtools</artifactId>-->
+<!--            <scope>runtime</scope>-->
+<!--            <optional>true</optional>-->
+<!--        </dependency>-->
+
+
+<!--        &lt;!&ndash; === ЛОГИРОВАНИЕ === &ndash;&gt;-->
+<!--        &lt;!&ndash; Log4j2 (более современная альтернатива стандартному Logback) &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-log4j2</artifactId>-->
+<!--        </dependency>-->
+
+<!--        &lt;!&ndash; === ТЕСТИРОВАНИЕ === &ndash;&gt;-->
+<!--        &lt;!&ndash; ВСЕ для тестов: JUnit 5, Mockito, Spring Test, MockMvc &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-test</artifactId>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
+
+<!--    </dependencies>-->
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+
 
 </project>
