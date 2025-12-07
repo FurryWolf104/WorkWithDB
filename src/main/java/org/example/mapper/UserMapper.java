@@ -1,8 +1,8 @@
-package mapper;
+package org.example.mapper;
 
-import dto.UserRequest;
-import dto.UserResponse;
-import entity.User;
+import org.example.dto.UserRequest;
+import org.example.dto.UserResponse;
+import org.example.entity.User;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;

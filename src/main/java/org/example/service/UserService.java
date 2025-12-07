@@ -1,13 +1,13 @@
-package service;
+package org.example.service;
 
-import dto.UserRequest;
-import dto.UserResponse;
-import entity.User;
-import mapper.UserMapper;
+import org.example.dto.UserRequest;
+import org.example.dto.UserResponse;
+import org.example.entity.User;
+import org.example.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import repository.UserRepository;
+import org.example.repository.UserRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;

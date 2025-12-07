@@ -1,4 +1,4 @@
-package dto;
+package org.example.dto;
 import jakarta.validation.constraints.*;
 /**
  * DTO для входящих запросов: создания и обновления пользователя.
