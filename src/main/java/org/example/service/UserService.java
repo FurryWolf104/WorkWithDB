@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.example.repository.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -31,15 +32,18 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
+    private final EventPublisherService eventPublisherService;
+
     /**
      * Конструктор для внедрения зависимостей.
      * Аннотация @Autowired не обязательна для одного конструктора в Spring 4.3+,
      * но мы явно указываем её для ясности.
      */
     @Autowired
-    public UserService(UserRepository userRepository, UserMapper userMapper) {
+    public UserService(UserRepository userRepository, UserMapper userMapper, EventPublisherService eventPublisherService) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.eventPublisherService = eventPublisherService;
     }
 
     // CREATE
@@ -51,6 +55,8 @@ public class UserService {
 
 
         User savedUser = userRepository.save(user);
+
+        eventPublisherService.publishUserCreated(savedUser.getEmail());
 
         return userMapper.toResponse(savedUser);
     }
@@ -105,13 +111,18 @@ public class UserService {
 
     // DELETE
     public void deleteUser(Long id) {
+        Optional<User> userOptional = userRepository.findById(id);
         // 1. Проверяем существование
         if (!userRepository.existsById(id)) {
             throw new IllegalArgumentException("Пользователь с ID " + id + " не найден");
         }
+        User user = userOptional.get();
+        String userEmail = user.getEmail();
 
         // 2. Удаляем (deleteById ничего не возвращает)
+
         userRepository.deleteById(id);
+        eventPublisherService.publishUserDeleted(userEmail);
     }
 
     // UTILITY
