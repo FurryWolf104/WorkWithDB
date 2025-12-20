@@ -16,7 +16,7 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         // Создаем сервер - указываем, где работает наше API
         Server server = new Server();
-        server.setUrl("http://localhost:8080");
+        server.setUrl("http://localhost:8081");
         server.setDescription("Локальный сервер разработки");
 
         // Создаем контактную информацию

@@ -4,12 +4,17 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.example.dto.UserRequest;
 import org.example.dto.UserResponse;
 import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.example.service.UserService;
+
 import java.util.List;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -19,7 +24,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @RestController
 @RequestMapping("/api/users")
-@Tag(name = "User Controller", description = "API для управления пользователями")
+@Tag(name = "User Controller", description = "API для управления пользователями с поддержкой HATEOAS")
 public class UserController {
     private final UserService userService;
 
@@ -37,8 +42,7 @@ public class UserController {
     @ApiResponse(responseCode = "201", description = "Пользователь успешно создан")
     @ApiResponse(responseCode = "400", description = "Некорректные данные пользователя")
     @PostMapping
-
-    public ResponseEntity<UserResponse> createUser(
+    public ResponseEntity<EntityModel<UserResponse>> createUser(
             @Parameter(
                     description = "Данные пользователя для создания",
                     required = true,
@@ -48,7 +52,7 @@ public class UserController {
                     )
             )  // Описание параметра
             @Valid @RequestBody UserRequest userRequest) {
-        UserResponse createdUser = userService.createUser(userRequest);
+        EntityModel<UserResponse> createdUser = userService.createUser(userRequest);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
@@ -66,8 +70,8 @@ public class UserController {
             )
     )
     @GetMapping
-    public ResponseEntity<List<UserResponse>> getAllUsers() {
-        List<UserResponse> users = userService.getAllUsers();
+    public ResponseEntity<CollectionModel<EntityModel<UserResponse>>> getAllUsers() {
+        CollectionModel<EntityModel<UserResponse>> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
 
@@ -93,14 +97,14 @@ public class UserController {
     })
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> getUserById(
+    public ResponseEntity<EntityModel<UserResponse>> getUserById(
             @Parameter(
             description = "ID пользователя",
             required = true,
             example = "1"
             )
             @PathVariable Long id) {
-        UserResponse user = userService.getUserById(id);
+        EntityModel<UserResponse> user = userService.getUserById(id);
         return ResponseEntity.ok(user);
     }
 
@@ -124,14 +128,14 @@ public class UserController {
             )
     })
     @GetMapping("/email/{email}")
-    public ResponseEntity<UserResponse> getUserByEmail(
+    public ResponseEntity<EntityModel<UserResponse>> getUserByEmail(
             @Parameter(
                     description = "Email пользователя",
                     required = true,
                     example = "user@example.com"
             )
             @PathVariable String email) {
-        UserResponse user = userService.getUserByEmail(email);
+        EntityModel<UserResponse> user = userService.getUserByEmail(email);
         return ResponseEntity.ok(user);
     }
 
@@ -163,7 +167,7 @@ public class UserController {
             )
     })
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponse> updateUser(
+    public ResponseEntity<EntityModel<UserResponse>> updateUser(
             @Parameter(
                     description = "ID пользователя для обновления",
                     required = true,
@@ -180,7 +184,7 @@ public class UserController {
             )
             @Valid @RequestBody UserRequest userRequest
     ) {
-        UserResponse updatedUser = userService.updateUser(id, userRequest);
+        EntityModel<UserResponse> updatedUser = userService.updateUser(id, userRequest);
         return ResponseEntity.ok(updatedUser);
     }
 

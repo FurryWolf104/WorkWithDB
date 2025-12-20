@@ -2,14 +2,19 @@ package org.example.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
+
 import io.swagger.v3.oas.annotations.media.Schema;
+
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 /**
  * DTO для исходящих ответов API.
  * Возвращается при GET запросах.
  */
-@Schema(description = "DTO для ответов API с информацией о пользователе")
-public class UserResponse {
+@Schema(description = "DTO для ответов API с информацией о пользователе и HATEOAS ссылками")
+@Relation(collectionRelation = "users", itemRelation = "user")
+public class UserResponse extends RepresentationModel<UserResponse> {
 
     @Schema(description = "Уникальный идентификатор пользователя", example = "1")
     private Long id;

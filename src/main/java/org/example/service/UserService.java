@@ -5,6 +5,8 @@ import org.example.dto.UserResponse;
 import org.example.entity.User;
 import org.example.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.example.repository.UserRepository;
@@ -43,50 +45,41 @@ public class UserService {
     }
 
     // CREATE
-    public UserResponse createUser(UserRequest request) {
-
+    public EntityModel<UserResponse> createUser(UserRequest request) {
         validateEmailUniqueness(request.getEmail());
 
         User user = userMapper.toEntity(request);
-
-
         User savedUser = userRepository.save(user);
 
-        return userMapper.toResponse(savedUser);
+        return userMapper.toEntityModel(savedUser);
     }
 
 
     // READ
     @Transactional(readOnly = true)
-    public UserResponse getUserById(Long id) {
-        // findById возвращает Optional<User>
+    public EntityModel<UserResponse> getUserById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Пользователь с ID " + id + " не найден"));
 
-        return userMapper.toResponse(user);
+        return userMapper.toEntityModel(user);
     }
 
     @Transactional(readOnly = true)
-    public List<UserResponse> getAllUsers() {
-        // findAll() возвращает List<User>
+    public CollectionModel<EntityModel<UserResponse>> getAllUsers() {
         List<User> users = userRepository.findAll();
-
-        // Преобразуем каждый User в UserResponse через stream
-        return users.stream()
-                .map(userMapper::toResponse)
-                .collect(Collectors.toList());
+        return userMapper.toCollectionModel(users);
     }
 
     @Transactional(readOnly = true)
-    public UserResponse getUserByEmail(String email) {
+    public EntityModel<UserResponse> getUserByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Пользователь с email " + email + " не найден"));
 
-        return userMapper.toResponse(user);
+        return userMapper.toEntityModel(user);
     }
 
     // UPDATE
-    public UserResponse updateUser(Long id, UserRequest request) {
+    public EntityModel<UserResponse> updateUser(Long id, UserRequest request) {
         if (!userRepository.existsById(id)) {
             throw new IllegalArgumentException("Пользователь с ID " + id + " не найден");
         }
@@ -97,10 +90,9 @@ public class UserService {
         }
 
         User userToUpdate = userMapper.toEntity(request, id);
-
         User updatedUser = userRepository.save(userToUpdate);
 
-        return userMapper.toResponse(updatedUser);
+        return userMapper.toEntityModel(updatedUser);
     }
 
     // DELETE
