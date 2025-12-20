@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.example.dto.UserRequest;
 import org.example.dto.UserResponse;
@@ -39,8 +40,50 @@ public class UserController {
             summary = "Создать нового пользователя",
             description = "Создает нового пользователя с указанными данными"
     )
-    @ApiResponse(responseCode = "201", description = "Пользователь успешно создан")
-    @ApiResponse(responseCode = "400", description = "Некорректные данные пользователя")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Пользователь успешно создан",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = UserResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Некорректные данные пользователя (валидация не пройдена)",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "Пример ошибки валидации",
+                                    value = """
+                {
+                  "name": "Имя не может быть пустым",
+                  "email": "Некорректный формат email",
+                  "age": "Возраст должен быть от 0 до 150"
+                }
+                """
+                            )
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Пользователь с таким email уже существует",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "Пример конфликта email",
+                                    value = """
+                {
+                  "error": "Bad Request",
+                  "message": "Пользователь с email alice@example.com уже существует"
+                }
+                """
+                            )
+                    )
+            )
+    })
+
     @PostMapping
     public ResponseEntity<EntityModel<UserResponse>> createUser(
             @Parameter(
@@ -92,7 +135,19 @@ public class UserController {
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "Пользователь с указанным ID не найден"
+                    description = "Пользователь с указанным ID не найден",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "Пример ошибки 404",
+                                    value = """
+                {
+                  "error": "Bad Request",
+                  "message": "Пользователь с ID 999 не найден"
+                }
+                """
+                            )
+                    )
             )
     })
 
@@ -155,17 +210,54 @@ public class UserController {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Некорректные данные пользователя"
+                    description = "Некорректные данные пользователя",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "Пример ошибки валидации",
+                                    value = """
+                {
+                  "name": "Имя должно содержать от 2 до 50 символов",
+                  "email": "Некорректный формат email"
+                }
+                """
+                            )
+                    )
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "Пользователь с указанным ID не найден"
+                    description = "Пользователь с указанным ID не найден",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "Пример ошибки 404",
+                                    value = """
+                {
+                  "error": "Bad Request",
+                  "message": "Пользователь с ID 999 не найден"
+                }
+                """
+                            )
+                    )
             ),
             @ApiResponse(
                     responseCode = "409",
-                    description = "Пользователь с таким email уже существует"
+                    description = "Пользователь с таким email уже существует",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "Пример конфликта email",
+                                    value = """
+                {
+                  "error": "Bad Request",
+                  "message": "Пользователь с email test@example.com уже существует"
+                }
+                """
+                            )
+                    )
             )
     })
+
     @PutMapping("/{id}")
     public ResponseEntity<EntityModel<UserResponse>> updateUser(
             @Parameter(
@@ -200,7 +292,19 @@ public class UserController {
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "Пользователь с указанным ID не найден"
+                    description = "Пользователь с указанным ID не найден",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "Пример ошибки 404",
+                                    value = """
+                {
+                  "error": "Bad Request",
+                  "message": "Пользователь с ID 999 не найден"
+                }
+                """
+                            )
+                    )
             )
     })
     @DeleteMapping("/{id}")
